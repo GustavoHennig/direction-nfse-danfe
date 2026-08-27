@@ -94,10 +94,11 @@ public sealed class DanfeHtmlRenderer
         var bytes = Helper.GetQrCode(url);
         var imgQrCodeSrc = $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
 
+        var basePath = _options.BasePath ?? AppContext.BaseDirectory;
+
         // Municípios (auto init)
         if (_options.AutoInitializeMunicipios)
         {
-            var basePath = _options.BasePath ?? AppContext.BaseDirectory;
             var estados = _options.EstadosCsvPath ?? Path.Combine(basePath, "Assets", "estados.csv");
             var municipios = _options.MunicipiosCsvPath ?? Path.Combine(basePath, "Assets", "municipios.csv");
             MunicipiosIbge.Initialize(estados, municipios);
@@ -118,10 +119,11 @@ public sealed class DanfeHtmlRenderer
         else if (municpioISSQN == null)
             warnings.MunicipioNotFound("infNFSe.cLocIncid");
 
-        var logoBase64 = GetLogoMunicipio(municipioPrestador);
+        var logoBase64 = GetLogoMunicipio(municipioPrestador, basePath);
 
         // Logo da nfse
-        var logoNfse = _options.LogoNFSePath != null ? Helper.GetLogo(_options.LogoNFSePath) : Helper.GetLogo(Path.Combine(AppContext.BaseDirectory, "Assets", "Logos", "nfse.png"));
+        var logoNfsePath = _options.LogoNFSePath ?? Path.Combine(basePath, "Assets", "Logos", "nfse.png");
+        var logoNfse = Helper.GetLogo(logoNfsePath);
 
         // Caminhos/valores auxiliares
         int? tpRetIssqn = infDps.valores?.trib?.tribMun?.tpRetISSQN;
@@ -339,13 +341,16 @@ public sealed class DanfeHtmlRenderer
         return (template, warnings.Warnings);
     }
 
-    private string? GetLogoMunicipio(MunicipiosIbge.Municipio? municipio)
+    private string? GetLogoMunicipio(MunicipiosIbge.Municipio? municipio, string basePath)
     {
-        var imageCodigoIbge = Path.Combine(AppContext.BaseDirectory, "Assets", "Logos", $"{municipio?.CodigoIbge}.png");
+        var imageCodigoIbge = Path.Combine(basePath, "Assets", "Logos", $"{municipio?.CodigoIbge}.png");
         if (File.Exists(imageCodigoIbge))
             return Helper.GetLogo(imageCodigoIbge);
 
-        return Helper.GetLogo(Path.Combine(AppContext.BaseDirectory, municipio?.LogoPath ?? string.Empty));
+        if (municipio == null || string.IsNullOrWhiteSpace(municipio.LogoPath))
+            return null;
+
+        return Helper.GetLogo(Path.Combine(basePath, municipio.LogoPath));
     }
     private Dictionary<string, string> BuildTomadorMap(InfDPS infDps, DanfeWarningCollector warnings)
     {

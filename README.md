@@ -26,6 +26,18 @@ Via NuGet:
 dotnet add package Direction.NFSe.Danfe
 ```
 
+Para aplicações multiplataforma que já possuam um mecanismo próprio de HTML para PDF, use `RenderHtml(...)`. Esse caminho mantém no Direction o parsing do XML, o template, os logos e os warnings, sem depender do binário Windows embutido pelo `NReco.PdfGenerator`:
+
+```csharp
+var danfe = new DanfeService(new DanfeOptions
+{
+    BasePath = AppContext.BaseDirectory
+});
+
+DanfeResult result = danfe.RenderHtml(xml, DanfeEnvironment.Production);
+string html = result.Html;
+```
+
 ---
 
 ## Uso básico (API recomendada)

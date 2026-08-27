@@ -18,16 +18,41 @@ public sealed class DanfeService
 
     public DanfeResult Generate(NFSeSchema nfse, DanfeEnvironment environment, DanfeStatus status = DanfeStatus.Autorizada)
     {
+        var result = RenderHtml(nfse, environment, status);
+        var pdfBytes = _pdf.Generate(result.Html);
+
+        return new DanfeResult
+        {
+            Environment = result.Environment,
+            Html = result.Html,
+            PdfBytes = pdfBytes,
+            Warnings = result.Warnings
+        };
+    }
+
+    public DanfeResult RenderHtml(NFSeSchema nfse, DanfeEnvironment environment, DanfeStatus status = DanfeStatus.Autorizada)
+    {
         var (html, warnings) = _renderer.RenderInternal(nfse, environment, status);
-        var pdfBytes = _pdf.Generate(html);
 
         return new DanfeResult
         {
             Environment = environment,
             Html = html,
-            PdfBytes = pdfBytes,
+            PdfBytes = Array.Empty<byte>(),
             Warnings = warnings
         };
+    }
+
+    public DanfeResult RenderHtml(string xml, DanfeEnvironment environment, DanfeStatus status = DanfeStatus.Autorizada)
+    {
+        using var sr = new StringReader(xml);
+        return RenderHtml(Deserialize(sr), environment, status);
+    }
+
+    public DanfeResult RenderHtml(Stream xmlStream, DanfeEnvironment environment, DanfeStatus status = DanfeStatus.Autorizada)
+    {
+        using var sr = new StreamReader(xmlStream);
+        return RenderHtml(Deserialize(sr), environment, status);
     }
     [Obsolete("Use Generate(NFSeSchema, DanfeEnvironment, DanfeStatus)")]
     public DanfeResult Generate(NFSeSchema nfse, DanfeEnvironment environment, bool isCancelled)

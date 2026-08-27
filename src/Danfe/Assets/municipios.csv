@@ -3946,7 +3946,7 @@ codigo_ibge,nome,latitude,longitude,capital,codigo_uf,siafi_id,ddd,fuso_horario,
 5218102,Portelândia,-17.3554,-52.6799,0,52,9557,64,America/Sao_Paulo,,
 2208502,Porto,-3.88815,-42.6998,0,22,1169,86,America/Sao_Paulo,,
 1200807,Porto Acre,-9.58138,-67.5478,0,12,0649,68,America/Rio_Branco,,
-4314902,Porto Alegre,-30.0318,-51.2065,1,43,8801,51,America/Sao_Paulo,,
+4314902,Porto Alegre,-30.0318,-51.2065,1,43,8801,51,America/Sao_Paulo,Assets\Logos\4314902.png,Prefeitura Municipal de Porto Alegre/RS<br>(51) 3289-0156
 5106778,Porto Alegre do Norte,-10.8761,-51.6357,0,51,9895,66,America/Porto_Velho,,
 2208551,Porto Alegre do Piauí,-6.96423,-44.1837,0,22,0372,89,America/Sao_Paulo,,
 1718006,Porto Alegre do Tocantins,-11.618,-47.0621,0,17,9723,63,America/Sao_Paulo,,
