@@ -1,6 +1,6 @@
 # Direction.NFSe.Danfe
 
-Biblioteca **.NET** para gerar **DANFSe (PDF)** a partir do XML da **NFSe Nacional (DPS/NFSe)**, **sem depender de endpoint externo**, permitindo **alto volume**, **baixa latência** e **customização completa de layout**.
+Biblioteca **.NET** para renderizar o **HTML do DANFSe** a partir do XML da **NFSe Nacional (DPS/NFSe)**, **sem depender de endpoint externo**, permitindo **alto volume**, **baixa latência** e **customização completa de layout**.
 
 > **Status:** operacional em produção nos cenários do autor.  
 > A biblioteca é **open source** e contribuições são fortemente incentivadas para ampliar compatibilidade com variações reais de XML e regras municipais.
@@ -9,7 +9,7 @@ Biblioteca **.NET** para gerar **DANFSe (PDF)** a partir do XML da **NFSe Nacion
 
 ## Principais recursos
 
-- ✅ Geração de **HTML e PDF** da DANFSe localmente  
+- ✅ Geração de **HTML** da DANFSe localmente
 - ✅ Sem chamadas externas (ideal para alto volume)  
 - ✅ Layout HTML totalmente customizável  
 - ✅ Observabilidade: **warnings padronizados** para campos ausentes/fallbacks  
@@ -26,7 +26,7 @@ Via NuGet:
 dotnet add package Direction.NFSe.Danfe
 ```
 
-Para aplicações multiplataforma que já possuam um mecanismo próprio de HTML para PDF, use `RenderHtml(...)`. Esse caminho mantém no Direction o parsing do XML, o template, os logos e os warnings, sem depender do binário Windows embutido pelo `NReco.PdfGenerator`:
+Use `RenderHtml(...)` para manter no Direction o parsing do XML, o template, os logos e os warnings. A aplicação consumidora pode converter o HTML em PDF com o mecanismo multiplataforma de sua preferência:
 
 ```csharp
 var danfe = new DanfeService(new DanfeOptions
@@ -42,7 +42,7 @@ string html = result.Html;
 
 ## Uso básico (API recomendada)
 
-### Gerando a DANFSe a partir do XML
+### Gerando o HTML da DANFSe a partir do XML
 
 ```csharp
 using Direction.NFSe.Danfe;
@@ -58,15 +58,15 @@ var danfe = new DanfeService(new DanfeOptions
     // TemplatePath = @"C:\meu-layout\Danfe.html"
 });
 
-DanfeResult result = danfe.Generate(
+DanfeResult result = danfe.RenderHtml(
     xml,
     DanfeEnvironment.Production
 );
 
-File.WriteAllBytes("danfse.pdf", result.PdfBytes);
+File.WriteAllText("danfse.html", result.Html);
 ```
 
-### Gerando a DANFSe **CANCELADA** a partir do XML
+### Gerando o HTML da DANFSe **CANCELADA** a partir do XML
 
 - Como no **XML** não vem uma informação se a NFSe está cancelada, você é que tem que informar via parâmetro como no exemplo abaixo:
 
@@ -78,13 +78,13 @@ var xml = File.ReadAllText("nfse.xml");
 
 var danfe = new DanfeService();
 
-DanfeResult result = danfe.Generate(
+DanfeResult result = danfe.RenderHtml(
     xml,
     DanfeEnvironment.Production,
-    true // Informa que é uma NFSe CANCELADA
+    DanfeStatus.Cancelada
 );
 
-File.WriteAllBytes("danfse.pdf", result.PdfBytes);
+File.WriteAllText("danfse.html", result.Html);
 ```
 
 ---
@@ -128,7 +128,7 @@ Esses warnings facilitam:
 ### A partir de `NFSeSchema`
 
 ```csharp
-DanfeResult result = danfe.Generate(
+DanfeResult result = danfe.RenderHtml(
     nfseSchema,
     DanfeEnvironment.Production
 );
@@ -139,9 +139,9 @@ DanfeResult result = danfe.Generate(
 ```csharp
 using var stream = File.OpenRead("nfse.xml");
 
-DanfeResult result = danfe.Generate(
+DanfeResult result = danfe.RenderHtml(
     stream,
-    DanfeEnvironment.RestrictedProduction
+    DanfeEnvironment.Restricted
 );
 ```
 
@@ -198,7 +198,7 @@ Códigos de warning padronizados:
 O projeto utiliza **golden tests** para evitar regressões visuais:
 
 - snapshot do HTML normalizado  
-- validação básica do PDF (sanity check)  
+- validação do HTML renderizado
 
 Para rodar os testes:
 

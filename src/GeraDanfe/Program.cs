@@ -28,14 +28,11 @@ var numeroNFSe = nfse.infNFSe?.nNFSe;
 var outputDir = Path.GetDirectoryName(filePathXml)
     ?? throw new InvalidOperationException("Não foi possível obter o diretório do XML.");
 
-var outputPdfPath = Path.Combine(outputDir, $"Danfe_{numeroNFSe}.pdf");
+var outputHtmlPath = Path.Combine(outputDir, $"Danfe_{numeroNFSe}.html");
 
 var danfeService = new DanfeService();
 
-var result = danfeService.Generate(nfse, DanfeEnvironment.Production);
-
-if (result.PdfBytes == null || result.PdfBytes.Length == 0)
-    throw new InvalidOperationException("GeraDanfe retornou null ou bytes vazios (PDF).");
+var result = danfeService.RenderHtml(nfse, DanfeEnvironment.Production);
 
 if (result.Warnings.Count > 0)
 {
@@ -46,6 +43,6 @@ if (result.Warnings.Count > 0)
     }
 }
 
-await File.WriteAllBytesAsync(outputPdfPath, result.PdfBytes);
+await File.WriteAllTextAsync(outputHtmlPath, result.Html);
 
-Console.WriteLine($"DANFE gerado com sucesso: {outputPdfPath}");
+Console.WriteLine($"HTML do DANFSe gerado com sucesso: {outputHtmlPath}");

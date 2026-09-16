@@ -1,3 +1,8 @@
+## Unreleased
+
+### Removed
+- Removida a geração de PDF baseada em `NReco.PdfGenerator`; consumidores devem converter o HTML renderizado com seu mecanismo multiplataforma.
+
 ## [0.1.7] - 2026-01-12
 
 ### Added

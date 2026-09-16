@@ -8,7 +8,7 @@ public class GoldenHtmlTests
     {
         // TODO: Criar as notas fiscais eletrônicas de serviço (NFS-e) de testes
         var service = new DanfeService(); ;
-        //var result = service.Generate(File.ReadAllText("Fixtures/nfse.xml"), DanfeEnvironment.Production);
+        //var result = service.RenderHtml(File.ReadAllText("Fixtures/nfse.xml"), DanfeEnvironment.Production);
 
         //var normalized = HtmlNormalization.Normalize(result.Html);
 

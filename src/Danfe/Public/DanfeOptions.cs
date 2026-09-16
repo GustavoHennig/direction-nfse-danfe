@@ -27,6 +27,6 @@ public sealed class DanfeOptions
     /// <summary>Path do CSV de municípios. Se nulo, usa {BasePath}/Assets/municipios.csv</summary>
     public string? MunicipiosCsvPath { get; init; }
 
-    /// <summary>Se true, inicializa automaticamente o cache de municípios ao gerar o PDF.</summary>
+    /// <summary>Se true, inicializa automaticamente o cache de municípios ao renderizar o DANFSe.</summary>
     public bool AutoInitializeMunicipios { get; init; } = true;
 }
